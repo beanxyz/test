@@ -53,3 +53,24 @@ module "mysql_sg" {
   number_of_computed_ingress_with_source_security_group_id = 1
 }
 
+#test
+
+module "mysql2_sg" {
+  source = "../../modules/mysql"
+
+  name        = "computed-mysql2-sg"
+  description = "Security group with MySQL/Aurora port open for HTTP security group created above (computed)"
+  vpc_id      = data.aws_vpc.default.id
+
+
+  computed_ingress_with_source_security_group_id = [
+    {
+      rule                     = "mysql-tcp"
+      source_security_group_id = module.mysql_sg.this_security_group_id
+    },
+  ]
+
+  number_of_computed_ingress_with_source_security_group_id = 1
+}
+
+
